@@ -1,32 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { axiosWithAuth } from '../utils/axiosWithAuth';
+import React, { useEffect, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Spinner } from 'reactstrap';
-import {
-    Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button
-  } from 'reactstrap';
-import Man from '../man.png'
-import Woman from '../woman.png';
+import { Card, CardImg, CardText, CardTitle, Button } from 'reactstrap';
 import Person from '../person.png';
+import { userContext } from '../contexts/userContext';
+import { getFriendsRequest } from '../utils/api/getFriendsRequest';
 
 function FriendsList() {
-    const [friends, setFriends] = useState([]);
-    console.log(friends);
+    const {currentUser, currentUserFriends, setUserFriends } = useContext(userContext);
+    const history = useHistory();
+
     useEffect(() => {
-        axiosWithAuth().get('http://localhost:5000/api/friends')
+        getFriendsRequest()
         .then(res => {
             console.log(res);
-            setFriends(res.data);
+            setUserFriends(res.data);
         })
         .catch(err => console.log(err))
     }, [])
+
     return (
         <div className='friends-wrapper'>
-            <h2> Welcome Back User!</h2>
+            <h2> Welcome Back, {currentUser}</h2>
+            <Button size='lg' color='primary' onClick={()=> history.push('/addfriend')}>Add a Friend</Button>
             <div className='friends-cards'>
           
-           { friends.length > 0? (
-            friends.map(friend => (
+           { currentUserFriends.length > 0? (
+            currentUserFriends.map(friend => (
                 <Card style={{borderRadius:'5px', border: '1px solid #a9a9a9'}}className='friend-card' key={friend.id}>
                     <CardTitle>Name: {friend.name}</CardTitle>
                     <CardImg style={{width:'50%', margin: '1.6rem auto'}} src={Person}/>

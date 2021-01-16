@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
-import axios from 'axios';
-import {Link, useHistory} from 'react-router-dom';
-import {Spinner } from 'reactstrap';
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import React, {useState, useContext} from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { Spinner } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import { loginRequest } from '../utils/api/loginRequest';
-
+import { userContext } from '../contexts/userContext';
 
 const initialUserCredentials = {
     username: '',
@@ -16,6 +15,8 @@ function Login() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const history = useHistory();
+
+    const { setCurrentUser } = useContext(userContext);
 
     const handleChange = e => {
         setUserCredentials({
@@ -39,7 +40,8 @@ function Login() {
                 const token = res.data.payload;
                 localStorage.setItem('token', token)
                 setIsLoading(false);
-                history.push('/friendslist');
+                setCurrentUser(testCredentials.username);
+                history.push('/friendslist');  
             })
             .catch(err => {
                 console.log(err);

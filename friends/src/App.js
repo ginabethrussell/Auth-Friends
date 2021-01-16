@@ -1,19 +1,40 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
 import FriendsList from './components/FriendsList';
+import AddFriend from './components/AddFriend';
 import PrivateRoute from './utils/PrivateRoute';
 import { Nav, NavItem, NavLink} from 'reactstrap';
 import Container from 'react-bootstrap/Container';
-
-import Friends from './friends.png'
+import { userContext as UserContext } from './contexts/userContext';
 
 import './App.css';
 
+
 function App() {
+  // set up state and a reducer to handle updates
+  const [user, setUser ] = useState('');
+  const [friends, setFriends] = useState([]);
+
+  const setCurrentUser = (user) => {
+    setUser(user);
+  }
+
+  const setUserFriends = (friends) => {
+    setFriends(friends);
+  }
+
+  const userObject = {
+    currentUser: user, 
+    setCurrentUser: setCurrentUser,
+    currentUserFriends: friends, 
+    setUsersFriends: setUserFriends
+  }
+
   return (
     <div className="App">
+      <UserContext.Provider value={userObject}>
       <Container >
       <Nav>
           <NavItem>
@@ -31,7 +52,9 @@ function App() {
           <Route exact path='/' component={Home} />
           <Route path='/login' component={Login} />
           <PrivateRoute path='/friendslist' component={FriendsList} />
+          <PrivateRoute path='/addfriend' component={AddFriend} />
       </Switch>
+      </UserContext.Provider> 
     </div>
   );
 }
