@@ -5,6 +5,7 @@ import { Card, CardImg, CardText, CardTitle, Button } from 'reactstrap';
 import Person from '../person.png';
 import { userContext } from '../contexts/userContext';
 import { getFriendsRequest } from '../utils/api/getFriendsRequest';
+import { deleteFriendRequest } from '../utils/api/deleteFriendRequest';
 
 function FriendsList() {
     const {currentUser, currentUserFriends, setUserFriends } = useContext(userContext);
@@ -13,11 +14,18 @@ function FriendsList() {
     useEffect(() => {
         getFriendsRequest()
         .then(res => {
-            console.log(res);
             setUserFriends(res.data);
         })
         .catch(err => console.log(err))
     }, [])
+
+    const handleDelete = (id) => {
+        deleteFriendRequest(id)
+            .then(res => {
+                setUserFriends(res.data);
+            })
+            .catch(err => console.log(err))
+    }
 
     return (
         <div className='friends-wrapper'>
@@ -32,6 +40,8 @@ function FriendsList() {
                     <CardImg style={{width:'50%', margin: '1.6rem auto'}} src={Person}/>
                     <CardText>Age: {friend.age}</CardText>
                     <CardText>Email: {friend.email}</CardText>
+                    <Button onClick={() => handleDelete(friend.id)}>Delete</Button>
+                    <Button onClick={() => history.push(`/updatefriend${friend.id}`)}>Update</Button>
                 </Card>
             ))
            ): (

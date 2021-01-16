@@ -4,6 +4,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import FriendsList from './components/FriendsList';
 import AddFriend from './components/AddFriend';
+import UpdateFriend from './components/UpdateFriend';
 import PrivateRoute from './utils/PrivateRoute';
 import { Nav, NavItem, NavLink} from 'reactstrap';
 import Container from 'react-bootstrap/Container';
@@ -29,7 +30,7 @@ function App() {
     currentUser: user, 
     setCurrentUser: setCurrentUser,
     currentUserFriends: friends, 
-    setUsersFriends: setUserFriends
+    setUserFriends: setUserFriends
   }
 
   return (
@@ -53,6 +54,7 @@ function App() {
           <Route path='/login' component={Login} />
           <PrivateRoute path='/friendslist' component={FriendsList} />
           <PrivateRoute path='/addfriend' component={AddFriend} />
+          <PrivateRoute path='/updatefriend:id' component={UpdateFriend} />
       </Switch>
       </UserContext.Provider> 
     </div>

@@ -1,8 +1,8 @@
-import React, {useState, useContext} from 'react';
-import { useHistory } from 'react-router-dom';
-import { Spinner } from 'reactstrap';
+import React, {useState, useContext, useEffect} from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
-import { addFriendRequest } from '../utils/api/addFriendRequest';
+import { Spinner } from 'reactstrap';
+import { updateFriendRequest } from '../utils/api/updateFriendRequest';
 import { userContext } from '../contexts/userContext';
 
 const initialFormValues = {
@@ -11,12 +11,31 @@ const initialFormValues = {
     email: '',
 }
 
-function AddFriend() {
+function UpdateFriend() {
+    const [friend, setFriend] = useState(initialFormValues);
     const [formValues, setFormValues] = useState(initialFormValues);
-    const [isAdding, setIsAdding] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
     const [error, setError] = useState('')
     const history = useHistory();
-    const { setUserFriends } = useContext(userContext);
+    const { setUserFriends, currentUserFriends } = useContext(userContext);
+    const {id} = useParams();
+
+    useEffect(() => {
+        console.log('id from url', id);
+        console.log('friends', currentUserFriends);
+        const selectedFriend = currentUserFriends.filter(friend => {
+            // console.log(friend.id, id);
+            return friend.id === Number(id);
+        })[0];
+        // console.log(selectedFriend)
+    
+        setFormValues({
+            name: selectedFriend.name,
+            age: selectedFriend.age,
+            email: selectedFriend.email
+        });
+        
+    }, []);
 
     const handleChange = e => {
         setFormValues({
@@ -25,39 +44,36 @@ function AddFriend() {
         })
     }
 
-    const addFriend = e => {
+    const updateFriend = e => {
         e.preventDefault();
         console.log(formValues);
-        const newFriend = {
-                name: formValues.name,
-                age: formValues.age,
-                email: formValues.email,
-              }
 
-        setIsAdding(true);
+        const updatedFriend = formValues
+
+        setIsUpdating(true);
         setError('');
 
-        addFriendRequest(newFriend)
+        updateFriendRequest(id, updatedFriend)
             .then(res => {
-                setIsAdding(false);
+                setIsUpdating(false);
                 console.log(res.data);
                 setUserFriends(res.data);
                 history.push('/friendslist');  
             })
             .catch(err => {
                 console.log(err);
-                setIsAdding(false);
+                setIsUpdating(false);
                 setError(err);
             })
 
         setFormValues(initialFormValues);
     }
 
-    if (isAdding){
+    if (isUpdating){
         return (
             <div>
                 <Spinner color="primary" />
-                <p>Adding Friend</p>
+                <p>Updating Friend</p>
                 <Spinner color="primary" />
             </div>
         )
@@ -69,9 +85,9 @@ function AddFriend() {
         )
     }else {
         return (
-            <div className='addFriend-wrapper'>
-                <Form className='form' onSubmit={addFriend}>
-                    <h3>Add a New Friend to Your Friend List</h3>
+            <div className='updateFriend-wrapper'>
+                <Form className='form' onSubmit={updateFriend}>
+                    <h3>Update Your Friend's Info</h3>
                     <FormGroup>
                     <Label size='lg' htmlFor='name'>Name: </Label>
                     <Input size='lg' type='text'
@@ -99,7 +115,7 @@ function AddFriend() {
                     onChange={handleChange}
                     />
                     </FormGroup>
-                    <Button color='primary' size='lg' type='submit'>Add Friend</Button>
+                    <Button color='primary' size='lg' type='submit'>Update Friend</Button>
                 </Form>
             </div>
         )
@@ -107,5 +123,5 @@ function AddFriend() {
     
 }
 
-export default AddFriend;
+export default UpdateFriend;
 
