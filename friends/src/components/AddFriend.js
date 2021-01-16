@@ -1,9 +1,11 @@
 import React, {useState, useContext} from 'react';
 import { useHistory } from 'react-router-dom';
-import { Spinner } from 'reactstrap';
-import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import { addFriendRequest } from '../utils/api/addFriendRequest';
 import { userContext } from '../contexts/userContext';
+
+import { Spinner } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+
 import Error from '../error.png';
 
 const initialFormValues = {

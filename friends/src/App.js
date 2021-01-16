@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
+import PrivateRoute from './utils/PrivateRoute';
 import Home from './components/Home';
 import Login from './components/Login';
 import FriendsList from './components/FriendsList';
 import AddFriend from './components/AddFriend';
 import UpdateFriend from './components/UpdateFriend';
-import PrivateRoute from './utils/PrivateRoute';
-import { Nav, NavItem, NavLink} from 'reactstrap';
-import Container from 'react-bootstrap/Container';
+
 import { userContext as UserContext } from './contexts/userContext';
 
+import { Nav, NavItem, NavLink} from 'reactstrap';
+import Container from 'react-bootstrap/Container';
 import './App.css';
 
 
@@ -34,8 +35,7 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <UserContext.Provider value={userObject}>
+    <div className="App">  
       <Container >
       <Nav>
           <NavItem>
@@ -45,18 +45,20 @@ function App() {
             <NavLink tag={Link} to='/login'>Login</NavLink>  
           </NavItem>
           <NavItem>
-            <NavLink tag={Link} to='/friendslist'>Friends</NavLink>  
+            <NavLink data-testid='friendslink' tag={Link} to='/friendslist'>Friends</NavLink>  
           </NavItem>
-      </Nav>
+      </Nav> 
       </Container>
       <Switch>
+      <UserContext.Provider value={userObject}>
           <Route exact path='/' component={Home} />
           <Route path='/login' component={Login} />
           <PrivateRoute path='/friendslist' component={FriendsList} />
           <PrivateRoute path='/addfriend' component={AddFriend} />
           <PrivateRoute path='/updatefriend:id' component={UpdateFriend} />
-      </Switch>
-      </UserContext.Provider> 
+          </UserContext.Provider> 
+      </Switch> 
+     
     </div>
   );
 }
