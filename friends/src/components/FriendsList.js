@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Spinner } from 'reactstrap';
-import { Card, CardImg, CardText, CardTitle, Button } from 'reactstrap';
+import { Card, CardImg, CardText, CardTitle, Button, ButtonGroup } from 'reactstrap';
 import Person from '../person.png';
 import { userContext } from '../contexts/userContext';
 import { getFriendsRequest } from '../utils/api/getFriendsRequest';
@@ -40,8 +40,10 @@ function FriendsList() {
                     <CardImg style={{width:'50%', margin: '1.6rem auto'}} src={Person}/>
                     <CardText>Age: {friend.age}</CardText>
                     <CardText>Email: {friend.email}</CardText>
-                    <Button onClick={() => handleDelete(friend.id)}>Delete</Button>
-                    <Button onClick={() => history.push(`/updatefriend${friend.id}`)}>Update</Button>
+                    <ButtonGroup>
+                        <Button color='success' size='lg' onClick={() => handleDelete(friend.id)}>Delete</Button>
+                        <Button color='primary' size='lg'onClick={() => history.push(`/updatefriend${friend.id}`)}>Update</Button>
+                    </ButtonGroup>
                 </Card>
             ))
            ): (
