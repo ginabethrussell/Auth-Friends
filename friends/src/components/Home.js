@@ -8,7 +8,7 @@ function Home() {
   const history = useHistory();
   return (
     < Container style={{ backgroundImage: `url(${Friends})`, backgroundSize: 'contain', width: '100%',
-    minHeight: '800px', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', display: 'flex',
+    minHeight: '700px', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', display: 'flex',
     flexDirection: 'column', justifyContent: 'center', alignItems: 'center', margin: '0 auto' }} >
       <div className="home-wrapper">
         <h1>My Friends List</h1>
