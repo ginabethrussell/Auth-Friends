@@ -4,6 +4,7 @@ import { Spinner } from 'reactstrap';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import { addFriendRequest } from '../utils/api/addFriendRequest';
 import { userContext } from '../contexts/userContext';
+import Error from '../error.png';
 
 const initialFormValues = {
     name: '',
@@ -16,7 +17,7 @@ function AddFriend() {
     const [isAdding, setIsAdding] = useState(false);
     const [error, setError] = useState('')
     const history = useHistory();
-    const { setUserFriends } = useContext(userContext);
+    const { setUserFriends, currentUserFriends } = useContext(userContext);
 
     const handleChange = e => {
         setFormValues({
@@ -28,6 +29,13 @@ function AddFriend() {
     const addFriend = e => {
         e.preventDefault();
         console.log(formValues);
+        // check to see if user already has entered a friend with the same name
+        const duplicateFriend = currentUserFriends.filter(friend => friend.name === formValues.name);
+        console.log(duplicateFriend);
+        if (duplicateFriend.length > 0){
+            setError('Whoops! You already have a friend with this name. Choose update instead to change their info.');
+            return;
+        }
         const newFriend = {
                 name: formValues.name,
                 age: formValues.age,
@@ -64,7 +72,8 @@ function AddFriend() {
     }else if (error !== ''){
         return(
             <>
-                <div>{error}</div>
+                <img src={Error} height="100px" />
+                <div className='error-message'>{error}</div>
             </>
         )
     }else {
